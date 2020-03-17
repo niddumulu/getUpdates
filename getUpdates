@@ -1,0 +1,20 @@
+//bot hanya menuliskan getUpdates ke spreadsheet.
+
+var token = "TOKEN";
+var url = "https://api.telegram.org/bot" + token;
+
+function getUpdates() {
+  var response = UrlFetchApp.fetch(url+"/getUpdates");
+  Logger.log(response.getContentText());
+}
+
+
+function doPost(e) {
+  var response = UrlFetchApp.fetch(url+"/getUpdates?offset=0");  
+  
+  var app = SpreadsheetApp;
+  var ss = app.getActiveSpreadsheet();
+  var activeSheet = ss.getSheetByName("getUpdates");
+  activeSheet.getRange("A1").setValue(response);
+  var data = activeSheet.getRange(2,1).getValue(); 
+}
