@@ -1,6 +1,6 @@
 //bot hanya menuliskan getUpdates ke spreadsheet.
 
-var token = "TOKEN";
+var token = "1110128198:AAGsyu01-ZFWpz4-baRhPbuX__MfHBrSAiI";
 var url = "https://api.telegram.org/bot" + token;
 
 function getUpdates() {
