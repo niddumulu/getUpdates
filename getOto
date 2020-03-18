@@ -1,0 +1,80 @@
+//bot hanya menuliskan getUpdates ke spreadsheet.
+
+function cobacoba() {
+  var chuckNorrisJSON = UrlFetchApp.fetch("https://api.telegram.org/bot1110128198:AAGsyu01-ZFWpz4-baRhPbuX__MfHBrSAiI/getupdates");
+  var chuckNorrisObject = JSON.parse(chuckNorrisJSON);
+  var app = SpreadsheetApp;
+  var ss = app.getActiveSpreadsheet();
+  var activeSheet = ss.getSheetByName("getUpdates");
+  var activeSheet2 = ss.getSheetByName("dBase");
+  activeSheet.getRange('A10').setValue(chuckNorrisJSON);
+  var CE10 = activeSheet.getRange('C10').getValues();
+  
+  if (CE10 == 0){
+    activeSheet.getRange('A11').setValue("Nggak ada kerjaan");
+  }
+}
+
+function getUpdates() {
+  var chuckNorrisJSON = UrlFetchApp.fetch("https://api.telegram.org/bot1110128198:AAGsyu01-ZFWpz4-baRhPbuX__MfHBrSAiI/getupdates");
+  var chuckNorrisObject = JSON.parse(chuckNorrisJSON);
+  
+  var app = SpreadsheetApp;
+  var ss = app.getActiveSpreadsheet();
+  var activeSheet = ss.getSheetByName("getUpdates");
+  var activeSheet2 = ss.getSheetByName("dBase");
+  activeSheet.getRange('A10').setValue(chuckNorrisJSON);
+  
+  var CE10 = activeSheet.getRange('C10').getValues();
+  
+  if (CE10 == 0){
+    activeSheet.getRange('A11').setValue("Nggak ada kerjaan");
+  } else if (CE10 == 1) {
+  
+    activeSheet.getRange('A11').setValue("Ayo kerja");
+    activeSheet.getRange("A1").setValue(chuckNorrisObject.result[0].update_id);//isi cell A1 dengan data update_id
+    activeSheet.getRange("A2").setValue(chuckNorrisObject.result[0].message.from.username);
+    activeSheet.getRange("A3").setValue(chuckNorrisObject.result[0].message.from.id);
+    activeSheet.getRange("A4").setValue(chuckNorrisObject.result[0].message.text);
+  
+    var range = activeSheet.getRange('A3'); //cell A3 berupa nomor telegram dicopy ke cell C1
+    var copy = range.getValues();
+    activeSheet.getRange('C1').setValue(copy);
+  
+    var range = activeSheet.getRange('A4'); //cell A4 berupa nomor telegram dicopy ke cell C2
+    var copy = range.getValues();
+    activeSheet.getRange('C2').setValue(copy);
+  
+    var C3 = activeSheet.getRange('C3');
+    var CE3 = C3.getValues();
+    
+    if (CE3 == 0) {
+      activeSheet.getRange('D1').setValue("Maaf anda belum terdaftar \nHub @niddumulu untuk mendaftar");
+    } else if (copy == "/start") {
+      activeSheet.getRange('D1').setValue("Selamat datang, ketik /help untuk bantuan.");
+    }
+  
+    else  {
+      activeSheet.getRange('D1').setValue("Ketik \n/help untuk bantuan\n/Sal untuk cek saldo\n/Depo untuk deposit.");
+    }
+ 
+    var data1 = activeSheet.getRange("B1").getValue(); 
+    var response = UrlFetchApp.fetch("https://api.telegram.org/bot1110128198:AAGsyu01-ZFWpz4-baRhPbuX__MfHBrSAiI/getupdates?offset="+data1);
+    Logger.log(response.getContentText());
+    var kosong = "";
+    activeSheet.getRange("A1").setValue(kosong);
+    activeSheet.getRange("A2").setValue(kosong);
+    activeSheet.getRange("A3").setValue(kosong);
+    activeSheet.getRange("A4").setValue(kosong);
+  
+    var balas = activeSheet.getRange("D1").getValue();
+    var chatid = activeSheet.getRange("C1").getValue();
+    sendText(chatid,balas);
+    activeSheet.getRange('D1').setValue("");
+    activeSheet.getRange('C2').setValue("");
+ }
+}
+function sendText(chatid, text) {
+  var urll = "https://api.telegram.org/bot1110128198:AAGsyu01-ZFWpz4-baRhPbuX__MfHBrSAiI/sendMessage?chat_id="+encodeURIComponent(chatid)+"&text="+encodeURIComponent(text);
+  var reply = UrlFetchApp.fetch(urll);
+}
